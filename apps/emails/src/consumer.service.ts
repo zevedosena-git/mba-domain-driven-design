@@ -26,8 +26,9 @@ export class ConsumerService {
   handleSpotOffered(msg: {
     payload: { customer_id: string; section_id: string };
   }) {
-    console.log(
-      `SpotOfferedToWaitingCustomerIntegrationEvent customer_id=${msg.payload.customer_id} section_id=${msg.payload.section_id}`,
-    );
+    console.log('ConsumerService.handleSpotOffered', {
+      customer_id: msg.payload.customer_id,
+      section_id: msg.payload.section_id,
+    });
   }
 }

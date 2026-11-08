@@ -15,6 +15,9 @@ export class OrderCancelledHandler implements IDomainEventHandler {
     const aggregate = await this.eventRepo.findByEventSpotId(
       event.event_spot_id,
     );
+    if (!aggregate) {
+      throw new Error('Event not found');
+    }
     aggregate.markSpotAsAvailable(event.event_spot_id);
     await this.eventRepo.add(aggregate);
     const reservation = await this.spotReservationRepo.findById(

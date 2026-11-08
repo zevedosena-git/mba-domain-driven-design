@@ -32,7 +32,11 @@ Cliente na fila, com status e `position` na ordem de chegada.
 
 Aviso ao primeiro `PENDING`: a entrada passa a `NOTIFIED` e o evento leva cliente, evento, seção e lugar.
 
-## Política
+## Oferta de lugar (`offerSpot`)
+
+Operação da `WaitingList` que promove a primeira entrada `PENDING` a `NOTIFIED`. Sem entrada pendente, não faz nada.
+
+## Política (`EventSpotReleasedHandler`)
 
 Reação ao lugar liberado que oferece a vaga ao primeiro da fila, sem reservar o lugar.
 
@@ -40,6 +44,6 @@ Reação ao lugar liberado que oferece a vaga ao primeiro da fila, sem reservar 
 
 A notificação saindo do processo, com `customer_id`, `event_id`, `section_id` e `spot_id`, até o contexto de e-mails.
 
-## Seção esgotada
+## Seção esgotada (`isSectionSoldOut`)
 
 Seção em que nenhum lugar está disponível para reserva. É a condição para entrar na lista de espera.

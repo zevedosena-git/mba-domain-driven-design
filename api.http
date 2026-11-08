@@ -31,6 +31,18 @@ Content-Type: application/json
 @customer_id = 61f0ff6e-0bb1-4635-8899-4b88ce46975b
 
 ###
+POST http://localhost:3000/customers
+Content-Type: application/json
+
+{
+    "name": "Customer 2",
+    "cpf": "390.533.447-05"
+}
+
+###
+@customer_b_id = 7c9e6679-7425-40de-944b-e07fc1f90ae7
+
+###
 GET http://localhost:3000/events
 
 ###
@@ -100,18 +112,6 @@ Content-Type: application/json
     "spot_id": "96298e63-5a38-4352-b97d-322259f10921",
     "card_token": "tok_visa"
 }
-
-###
-POST http://localhost:3000/customers
-Content-Type: application/json
-
-{
-    "name": "Customer 2",
-    "cpf": "390.533.447-05"
-}
-
-###
-@customer_b_id = 7c9e6679-7425-40de-944b-e07fc1f90ae7
 
 ###
 POST http://localhost:3000/events/{{event_id}}/sections/{{section_id}}/waiting-list

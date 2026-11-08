@@ -4,9 +4,7 @@ import { DomainEventManager } from '../../common/domain/domain-event-manager';
 import { UnitOfWorkMikroOrm } from '../../common/infra/unit-of-work-mikro-orm';
 import { Customer } from '../domain/entities/customer.entity';
 import { Partner } from '../domain/entities/partner.entity';
-import { EventSectionId } from '../domain/entities/event-section';
-import { Order, OrderStatus } from '../domain/entities/order.entity';
-import { OrderId } from '../domain/entities/order.entity';
+import { Order, OrderId, OrderStatus } from '../domain/entities/order.entity';
 import { OrderCancelled } from '../domain/events/domain-events/order-cancelled.event';
 import {
   CustomerSchema,
