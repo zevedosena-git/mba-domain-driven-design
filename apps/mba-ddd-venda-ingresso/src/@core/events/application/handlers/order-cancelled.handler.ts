@@ -12,7 +12,9 @@ export class OrderCancelledHandler implements IDomainEventHandler {
   ) {}
 
   async handle(event: OrderCancelled): Promise<void> {
-    const aggregate = await this.eventRepo.findByEventSpotId(event.event_spot_id);
+    const aggregate = await this.eventRepo.findByEventSpotId(
+      event.event_spot_id,
+    );
     aggregate.markSpotAsAvailable(event.event_spot_id);
     await this.eventRepo.add(aggregate);
     const reservation = await this.spotReservationRepo.findById(

@@ -11,10 +11,7 @@ import { CustomerId } from './customer.entity';
 import { EventSectionId } from './event-section';
 import { EventSpotId } from './event-spot';
 import { EventId } from './event.entity';
-import {
-  WaitingListEntry,
-  WaitingListEntryStatus,
-} from './waiting-list-entry';
+import { WaitingListEntry, WaitingListEntryStatus } from './waiting-list-entry';
 
 export class WaitingListId extends Uuid {}
 

@@ -17,7 +17,9 @@ export class EventMysqlRepository implements IEventRepository {
     });
   }
 
-  async findByEventSpotId(spot_id: string | EventSpotId): Promise<Event | null> {
+  async findByEventSpotId(
+    spot_id: string | EventSpotId,
+  ): Promise<Event | null> {
     return this.entityManager.findOne(Event, {
       sections: {
         spots: {
