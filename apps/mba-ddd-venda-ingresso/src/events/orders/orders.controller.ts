@@ -10,6 +10,11 @@ export class OrdersController {
     return this.ordersService.list();
   }
 
+  @Post(':order_id/cancel')
+  cancel(@Param('order_id') order_id: string) {
+    return this.ordersService.cancel(order_id);
+  }
+
   @Post()
   create(
     @Param('event_id') event_id: string,

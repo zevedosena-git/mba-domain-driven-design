@@ -1,3 +1,4 @@
+import { EventSpotReleased } from '../../events/domain-events/event-spot-released.event';
 import { Event } from '../event.entity';
 import { PartnerId } from '../partner.entity';
 import { initOrm } from './helpers';
@@ -73,5 +74,41 @@ describe('Event Entity Unit Tests', () => {
     [...section1.spots, ...section2.spots].forEach((spot) => {
       expect(spot.is_published).toBe(true);
     });
+  });
+
+  test('deve devolver um lugar reservado e registrar EventSpotReleased', () => {
+    const event = Event.create({
+      name: 'Evento 1',
+      description: 'Descrição do evento 1',
+      date: new Date(),
+      partner_id: new PartnerId(),
+    });
+    const reservedBefore = event.total_spots_reserved;
+
+    event.addSection({
+      name: 'Sessão 1',
+      description: 'Descrição da sessão 1',
+      total_spots: 2,
+      price: 100,
+    });
+    event.publishAll();
+
+    const section = [...event.sections][0];
+    const spot = [...section.spots][0];
+    event.markSpotAsReserved({
+      section_id: section.id,
+      spot_id: spot.id,
+    });
+
+    event.markSpotAsAvailable(spot.id);
+
+    expect(spot.is_reserved).toBe(false);
+    expect(event.total_spots_reserved).toBe(reservedBefore);
+    const released = [...event.events].find(
+      (domainEvent) => domainEvent instanceof EventSpotReleased,
+    ) as EventSpotReleased;
+    expect(released.aggregate_id.equals(event.id)).toBe(true);
+    expect(released.section_id.equals(section.id)).toBe(true);
+    expect(released.spot_id.equals(spot.id)).toBe(true);
   });
 });

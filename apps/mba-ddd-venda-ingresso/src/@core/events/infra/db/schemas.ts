@@ -1,4 +1,4 @@
-import { Cascade, EntitySchema } from '@mikro-orm/core';
+import { Cascade, EntitySchema, QueryOrder } from '@mikro-orm/core';
 import { Partner } from '../../domain/entities/partner.entity';
 import { PartnerIdSchemaType } from './types/partner-id.schema-type';
 import { Customer } from '../../domain/entities/customer.entity';
@@ -13,6 +13,13 @@ import { Event } from '../../domain/entities/event.entity';
 import { SpotReservation } from '../../domain/entities/spot-reservation.entity';
 import { Order, OrderStatus } from '../../domain/entities/order.entity';
 import { OrderIdSchemaType } from './types/order-id.schema-type';
+import {
+  WaitingListEntry,
+  WaitingListEntryStatus,
+} from '../../domain/entities/waiting-list-entry';
+import { WaitingList } from '../../domain/entities/waiting-list.entity';
+import { WaitingListIdSchemaType } from './types/waiting-list-id.schema-type';
+import { WaitingListEntryIdSchemaType } from './types/waiting-list-entry-id.schema-type';
 
 export const PartnerSchema = new EntitySchema<Partner>({
   class: Partner,
@@ -162,6 +169,68 @@ export const OrderSchema = new EntitySchema<Order>({
       mapToPk: true,
       inherited: true,
       customType: new EventSpotIdSchemaType(),
+    },
+  },
+});
+
+export const WaitingListSchema = new EntitySchema<WaitingList>({
+  class: WaitingList,
+  uniques: [{ properties: ['event_id', 'section_id'] }],
+  properties: {
+    id: {
+      customType: new WaitingListIdSchemaType(),
+      primary: true,
+    },
+    event_id: {
+      reference: 'm:1',
+      entity: () => Event,
+      hidden: true,
+      mapToPk: true,
+      inherited: true,
+      customType: new EventIdSchemaType(),
+    },
+    section_id: {
+      reference: 'm:1',
+      entity: () => EventSection,
+      hidden: true,
+      mapToPk: true,
+      inherited: true,
+      customType: new EventSectionIdSchemaType(),
+    },
+    entries: {
+      reference: '1:m',
+      entity: () => WaitingListEntry,
+      mappedBy: (entry) => entry.waiting_list_id,
+      eager: true,
+      cascade: [Cascade.ALL],
+      orderBy: { position: QueryOrder.ASC },
+    },
+  },
+});
+
+export const WaitingListEntrySchema = new EntitySchema<WaitingListEntry>({
+  class: WaitingListEntry,
+  properties: {
+    id: {
+      customType: new WaitingListEntryIdSchemaType(),
+      primary: true,
+    },
+    position: { type: 'number' },
+    status: { enum: true, items: () => WaitingListEntryStatus },
+    customer_id: {
+      reference: 'm:1',
+      entity: () => Customer,
+      mapToPk: true,
+      hidden: true,
+      inherited: true,
+      customType: new CustomerIdSchemaType(),
+    },
+    waiting_list_id: {
+      reference: 'm:1',
+      entity: () => WaitingList,
+      hidden: true,
+      mapToPk: true,
+      customType: new WaitingListIdSchemaType(),
     },
   },
 });

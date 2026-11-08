@@ -1,4 +1,6 @@
+import { FilterQuery } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mysql';
+import { EventSpotId } from '../../../domain/entities/event-spot';
 import { Event, EventId } from '../../../domain/entities/event.entity';
 import { IEventRepository } from '../../../domain/repositories/event-repository.interface';
 
@@ -13,6 +15,16 @@ export class EventMysqlRepository implements IEventRepository {
     return this.entityManager.findOne(Event, {
       id: typeof id === 'string' ? new EventId(id) : id,
     });
+  }
+
+  async findByEventSpotId(spot_id: string | EventSpotId): Promise<Event | null> {
+    return this.entityManager.findOne(Event, {
+      sections: {
+        spots: {
+          id: typeof spot_id === 'string' ? new EventSpotId(spot_id) : spot_id,
+        },
+      },
+    } as FilterQuery<Event>);
   }
 
   async findAll(): Promise<Event[]> {

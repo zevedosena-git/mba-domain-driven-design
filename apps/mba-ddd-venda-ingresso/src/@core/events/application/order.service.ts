@@ -1,3 +1,4 @@
+import { ApplicationService } from '../../common/application/application.service';
 import { IUnitOfWork } from '../../common/application/unit-of-work.interface';
 import { EventSectionId } from '../domain/entities/event-section';
 import { EventSpotId } from '../domain/entities/event-spot';
@@ -17,10 +18,23 @@ export class OrderService {
     private spotReservationRepo: ISpotReservationRepository,
     private uow: IUnitOfWork,
     private paymentGateway: PaymentGateway,
+    private applicationService: ApplicationService,
   ) {}
 
   list() {
     return this.orderRepo.findAll();
+  }
+
+  async cancel(order_id: string) {
+    return this.applicationService.run(async () => {
+      const order = await this.orderRepo.findById(order_id);
+      if (!order) {
+        throw new Error('Order not found');
+      }
+      order.cancel();
+      await this.orderRepo.add(order);
+      return order;
+    });
   }
 
   async create(input: {
